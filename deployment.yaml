@@ -1,17 +1,28 @@
-apiVersion: batch/v1
+apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: timekeeper
 spec:
   schedule: "*/10 * * * 1-5"
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
       template:
         spec:
           containers:
           - name: timekeeper
-            image: timekeeper
+            image: 799439856592.dkr.ecr.us-east-1.amazonaws.com/timekeeper:${IMAGE_TAG}
             imagePullPolicy: IfNotPresent
+            envFrom:
+            - secretRef:
+                name: alpaca-secret
+            - secretRef:
+                name: kafka-secret
+            - configMapRef:
+                name: kafka-cm
+            - configMapRef:
+                name: alpaca-cm
             command:
             - /bin/sh
             - -c

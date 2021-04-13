@@ -6,6 +6,7 @@ use anyhow::{anyhow, Result};
 use dotenv::dotenv;
 use rdkafka::producer::FutureRecord;
 use serde::{Deserialize, Serialize};
+use std::process::exit;
 
 mod settings;
 use settings::Settings;
@@ -58,10 +59,10 @@ async fn run() -> Result<()> {
 #[tokio::main]
 async fn main() -> Result<()> {
     match run().await {
-        Ok(_) => std::process::exit(0),
+        Ok(_) => exit(0),
         Err(e) => {
             eprintln!("{:?}", e);
-            std::process::exit(1)
+            exit(1)
         }
     }
 }
